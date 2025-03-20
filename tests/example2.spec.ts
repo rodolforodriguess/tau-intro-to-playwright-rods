@@ -10,12 +10,8 @@ const pageUrl = /.*intro/;
 test.beforeEach(async ({page}) => {
     await page.goto(URL);
     homePage = new HomePage(page);
-});
-
-async function clickGetStarted(page: Page) {
-    await homePage.clickGetStarted();
     topMenuPage = new TopMenuPage(page);
-}
+});
 
 test.describe('Playwright website', () => {
 
@@ -23,16 +19,16 @@ test.describe('Playwright website', () => {
         await homePage.assertPageTitle();
     });
     
-    test('get started link', async ({ page }) => {
+    test('get started link', async () => {
         // Act
-        await clickGetStarted(page);
+        await homePage.clickGetStarted();
         // Assert
         await topMenuPage.assertPageUrl(pageUrl);
     });
     
-    test('check Java page', async ({ page }) => {
+    test('check Java page', async () => {
         await test.step('Act', async () => {
-            await clickGetStarted(page);
+            await homePage.clickGetStarted();
             await topMenuPage.hoverNode();
             await topMenuPage.clickJava();
         });
@@ -42,5 +38,11 @@ test.describe('Playwright website', () => {
             await topMenuPage.assertNodeDescriptionNotVisible();
             await topMenuPage.assertJavaDescriptionVisible();
         });
-    });
+    });  
+
+    test('search a term', async () => {
+        await homePage.clickGetStarted();
+        await topMenuPage.assertPageUrl(pageUrl);
+        await topMenuPage.openSearchDialog();
+    })
 });
