@@ -7,7 +7,7 @@ let homePage: HomePage;
 let topMenuPage: TopMenuPage;
 const pageUrl = /.*intro/;
 
-test.beforeEach(async ({page}) => {
+test.beforeEach(async ({ page }) => {
     await page.goto(URL);
     homePage = new HomePage(page);
     topMenuPage = new TopMenuPage(page);
@@ -40,9 +40,22 @@ test.describe('Playwright website', () => {
         });
     });  
 
-    test('search a term', async () => {
-        await homePage.clickGetStarted();
-        await topMenuPage.assertPageUrl(pageUrl);
-        await topMenuPage.openSearchDialog();
+    test.only('search a term', async ({ page }) => {
+       await test.step('Act', async () => {
+            await homePage.clickGetStarted();
+            await topMenuPage.assertPageUrl(pageUrl);
+            await topMenuPage.openSearchDialog();
+            await topMenuPage.typeSearch('Trace viewer');
+            await page.keyboard.press('ArrowDown');
+            await page.keyboard.press('ArrowUp');
+            await page.keyboard.press('Enter');
+       }); 
+
+       await test.step('assert', async ()=> {
+            const traceViewerUrl = /.*trace-viewer-intro/;
+            await topMenuPage.assertPageUrl(traceViewerUrl);
+            await topMenuPage.assertTraceViewer();
+       })
+        
     })
 });

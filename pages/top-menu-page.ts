@@ -7,9 +7,12 @@ export class TopMenuPage {
     readonly javaLink: Locator;
     readonly nodeLabel: Locator;
     readonly javaLabel: Locator;
+    readonly traceViewer: Locator;
     readonly search: Locator;
+    readonly inputSearch: Locator;
     readonly nodeDescription: string = 'Installing Playwright';
     readonly javaDescription: string = `Playwright is distributed as a set of Maven modules. The easiest way to use it is to add one dependency to your project's pom.xml as described below. If you're not familiar with Maven please refer to its documentation.`;
+    readonly traceViewerDescription = 'Playwright Trace Viewer is a GUI tool that lets you explore recorded Playwright traces of your tests meaning you can go back and forward through each action of your test and visually see what was happening during each action.'
 
     constructor(page: Page) {
         this.page = page;
@@ -18,7 +21,9 @@ export class TopMenuPage {
         this.javaLink = page.getByRole('navigation', { name: 'Main' }).getByText('Java');
         this.nodeLabel = page.getByText(this.nodeDescription, {exact:true});
         this.javaLabel = page.getByText(this.javaDescription);
+        this.traceViewer = page.getByText(this.traceViewerDescription);
         this.search = page.getByRole('button', { name: 'Search'});
+        this.inputSearch = page.locator('#docsearch-input');
     }
 
     async hoverNode() {
@@ -41,8 +46,16 @@ export class TopMenuPage {
         await expect(this.javaLabel).toBeVisible();
     }
 
+    async assertTraceViewer(){
+        await expect(this.traceViewer).toBeVisible();
+    }
+
     async openSearchDialog() {
         await this.search.click();
+    }
+
+    async typeSearch(text :string) {
+        await this.inputSearch.type(text, { delay: 200 });
     }
 
 }
