@@ -40,7 +40,7 @@ test.describe('Playwright website', () => {
         });
     });  
 
-    test.only('search a term', async ({ page }) => {
+    test('search a term', async ({ page }) => {
        await test.step('Act', async () => {
             await homePage.clickGetStarted();
             await topMenuPage.assertPageUrl(pageUrl);
